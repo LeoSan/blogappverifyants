@@ -14,9 +14,15 @@ class Server {
       this.app = express(),
       this.port  = 5500,
       this.seguridad  = '',
-      this.whitelist = ['http://localhost:5500/', 'https://blogappverifyants.firebaseapp.com/'], //damos permiso solo a estas direcciones
+      this.whitelist = ['http://localhost:5500/', 'https://blogappverifyants.firebaseapp.com/', 'https://blogappverifyants.firebaseapp.com/'], //damos permiso solo a estas direcciones
       this.optionCors = {
-        'Access-Control-Allow-Origin':'https://blogappverifyants.firebaseapp.com/' //Si Funciona con esto
+        origin: (origin, callback) => {                           // Otra forma mas arcaica pero interesante
+          if ( this.whitelist.includes(origin)) {
+            callback(null, true);
+          } else {
+            callback(new Error('no permitido'), false);
+          }
+        }
       },
 
       //rutas de aplicación
