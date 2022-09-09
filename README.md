@@ -114,5 +114,73 @@ https://platzi.com/tutoriales/1435-firebase-web/8710-instala-y-corre-el-proyecto
   - Escogemos correo y contraseña la cual usaremos 
   - ![Auto](info/Autentication_0008.png)
   - Luego de validar e iniciar en `Consola` que vamos usar `Autentication` debemos ir al script 
-  
-- Paso 2:   
+  - Es importante resaltar que hay muchos componentes por lo que se necesita leer mas y probar, pero con esto ya podremos usar FIREBASE para administrar nuestros usuarios. 
+- Paso 2: Esto es a nivel de código fuente, hay que ser precisos aquí. para este ejemplo cree un servidor que pueda consumir APIS en este caso los componentes de `Autentication` y creando una pagina estatica donde estará nuestro front. 
+- PD-> Leonard Recuerda que express se puede usar para back como front solo que al crear tu archivo `server` debemos configurarlo tal cual como esta aquí para prevenir estas fallas como hoy 09/09/2022 [server.js](C:\Users\cuenc\Desktop\Cursos\blogappverifyants\server\server.js)
+
+  - Paso 2.1: Debemos configurar el `firebaseConfig`, tiene datos sencibles pero esto nos ayuda a establecer nuestra conexion con `firebase`, para este caso lo estoy usando como un metodo dentro de mi servicio web API que se conectará con el front. 
+```
+    this.firebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: "",
+      measurementId: ""
+    };
+``` 
+  - Paso 2.2: usamos los metodos que nos indica `Firebase` y lo usare para este caso como un metodo que se implementa en el servicio web   
+```
+  async registro(data) {
+    const app = initializeApp(this.firebaseConfig);
+    //const analytics = getAnalytics(app);
+    const auth = getAuth();
+
+    let respuesta =  createUserWithEmailAndPassword(auth, data.email, data.password)
+      .then((userCredential) => {
+        // Signed in
+        console.log("Entro->",userCredential.user);
+        return  userCredential.user;
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.table('Error->',errorCode,errorMessage);
+        return errorMessage;
+      });
+
+    return respuesta;
+  }
+```
+  - Paso 2.3: claro no se te olvide implementar los pquetes para poder lograr la conexión con `firebase`
+```
+import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword  } from "firebase/auth";
+import { getAnalytics } from "firebase/analytics";
+```
+  - PD: Recuerda configurar bien tu babel ya que sin esto configurado no podras usar los `import` que es algo que me dio mucho trabajo ya que en `nodejs` se usan los `require()`
+```
+//Instalas  
+npm i @babel/cli @babel/core @babel/node @babel/preset-env nodemon
+
+//crea y Configura -> touch .babelrc
+
+{
+    "presets": [
+      ["@babel/env", {
+        "targets": {
+          "node": "current"
+        }
+      }]
+    ]
+  }
+
+//Configura tu package.json y reinicia todo si tienes el servidor levatando 
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "nodemon --exec babel-node index.js",
+    "build": "babel-node index.js",
+    "lint": "eslint"
+  },
+```
