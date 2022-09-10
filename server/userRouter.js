@@ -25,10 +25,8 @@ router.post('/registro',  async (req = request, res = response, next) => {
 
   const body = req.body;
   try {
-    console.log("Enviando->",body);
       const user = await service.registro(body);
-      console.log("llego->", user);
-      res.status(200).json({"mensaje->":user});
+      res.status(200).json({status:'ok', user});
     } catch (error) {
       res.status(404).json({"mensaje Error->":error});
       //next(error); //se agrega el next para atrapar de forma explicita el error con el middleware

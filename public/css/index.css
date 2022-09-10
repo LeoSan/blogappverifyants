@@ -55,7 +55,7 @@ body {
   font-family: 'Allerta', sans-serif;
 }
 .headerppal {
-  background: var(--header-bg-color); 
+  background: var(--header-bg-color);
   overflow: hidden;
   box-shadow: 0 8px 10px rgba(0,0,0,0.5);
   padding-bottom: 30px;
@@ -92,7 +92,7 @@ body {
 
 .menu {
   background: var(--menu-bg-color);
-  border-left: 10px solid var(--border-bg-color); 
+  border-left: 10px solid var(--border-bg-color);
   box-shadow: 0 8px 10px rgba(0,0,0,0.5);
 }
 .menu ul {
@@ -277,7 +277,7 @@ body {
   text-decoration: underline;
 }
 .posts .post .post-footer {
-  background: var(--footer-bg-color); 
+  background: var(--footer-bg-color);
   color: var(--main-letter-dos-color);
   font-size: 17px;
   padding-bottom: 0.5em;
@@ -386,6 +386,24 @@ body {
   margin-bottom: 1em;
   margin-top: 1em;
 }
+
+.message-success{
+  background-color: var(--mensage-success);
+  color: var(--main-letter-dos-color);
+  border: solid 1.5px var(--main-letter-color);
+  box-shadow: 5px 5px var(--shadon-uno);
+  margin-top: 20px;
+
+}
+.message-fall{
+  background-color: var(--mensage-fall);
+  color: var(--main-letter-color);
+  border: solid 1.5px var(--main-letter-color);
+  box-shadow: 5px 5px var(--shadon-uno);
+  margin-top: 20px;
+
+}
+
 @media screen and (min-width: 768px) {
   .headerppal {
     text-align: left;
@@ -443,7 +461,7 @@ body {
   }
   .registro-bienvenida .registro-bienvenida-texto {
     margin-bottom: 2em;
-    font-size: 1.5em;
+    font-size: 1.2em;
   }
   .registro-bienvenida span {
     font-size: 1.5em;

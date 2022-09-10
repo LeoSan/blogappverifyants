@@ -30,13 +30,13 @@ class UserServices {
     let respuesta =  createUserWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
         // Signed in
-        console.log("Entro->",userCredential.user);
+        //console.log("Entro->",userCredential.user);
         return  userCredential.user;
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.table('Error->',errorCode,errorMessage);
+        //console.table('Error->',errorCode,errorMessage);
         return errorMessage;
       });
 

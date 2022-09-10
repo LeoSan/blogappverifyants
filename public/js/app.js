@@ -21,6 +21,11 @@ const cerrarModal=(nombreModal)=>{
   instance.close();
 };
 
+const toggleMensagge =(remove, add, msg)=>{
+  document.getElementById("msjApi").classList.remove(remove);
+  document.getElementById("msjApi").classList.add(add);
+  document.getElementById("msjApi").innerHTML = `!${msg}!`;
+};
 
 //Definición de Eventos
 btnInicioSesion.addEventListener("click", function () {
@@ -58,28 +63,42 @@ btnModalPost.addEventListener("click", function () {
 
 
 btnRegistroEmail.addEventListener("click", function () {
-
-
   var data ={
     nombre:document.getElementById('nombreContactoReg').value,
     email:document.getElementById('emailContactoReg').value,
     password:document.getElementById('passwordReg').value
+  };
+
+
+  if(data.email == '' || data.password == '' ){
+    toggleMensagge("message-success", "message-fall", "Debes llenar los campos por favor.");
+    return;
   }
 
-  fetch(URI_REGISTRO,{
-    method:'POST',
-    headers:{
-        'Content-Type':'application/json',
-    },
-    body:JSON.stringify(data)
-}).then(resp=>{
-    resp.json();
-
-  }).catch(error=>{
-
+  try {
+      fetch(URI_REGISTRO,{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json',
+        },
+        body:JSON.stringify(data)
+    }).then(resp=>{
+      if(resp.status=='200'){
+          toggleMensagge("message-fall", "message-success", "Se registró de manera exitosa, ahora inicia sesión con tu cuenta.");
+          document.getElementById('nombreContactoReg').value="",
+          document.getElementById('emailContactoReg').value="",
+          document.getElementById('passwordReg').value="";
+        }else{
+          toggleMensagge("message-success","message-fall", "Hubo un error en la conexión.");
+        }
+      }).catch(error=>{
+        toggleMensagge("message-success","message-fall", "Hubo un error en la conexión.");
+        console.log(error);
+      });
+  } catch (error) {
     console.log(error);
-
-  });
+    toggleMensagge("message-success","message-fall", "Hubo un error en la conexión.");
+  }
 
 
 });
