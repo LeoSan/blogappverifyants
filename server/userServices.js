@@ -1,7 +1,8 @@
-import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword  } from "firebase/auth";
-import { getAnalytics } from "firebase/analytics";
 // Initialize Firebase
+import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged  } from "firebase/auth";
+import { getAnalytics } from "firebase/analytics";
+
 
 class UserServices {
 
@@ -18,11 +19,29 @@ class UserServices {
     //this.generate();
   }
 
-  async create(data) {
-    return [{id:1,name:'Peras', precio:50.5, description:'Peras sin manzanas'}];
+  //Servicio-Firebase: Para login en Firebase
+  async signInWithEmail(data) {
+    const app = initializeApp(this.firebaseConfig);
+    const auth = getAuth();
+    let respuesta;
+
+    //Es una promesa
+    respuesta = signInWithEmailAndPassword(auth, data.email, data.password)
+    .then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      return user;
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      return errorMessage;
+    });
+    return respuesta;
   }
 
-  async registro(data) {
+  //Servicio-Firebase: Para registrar Usuarios en Firebase
+  async createUserWithEmail(data) {
     const app = initializeApp(this.firebaseConfig);
     //const analytics = getAnalytics(app);
     const auth = getAuth();
@@ -30,17 +49,33 @@ class UserServices {
     let respuesta =  createUserWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
         // Signed in
-        //console.log("Entro->",userCredential.user);
         return  userCredential.user;
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        //console.table('Error->',errorCode,errorMessage);
         return errorMessage;
       });
 
     return respuesta;
+  }
+
+  //Servicio-Firebase: Es un escuchador si el usuario no ha cambiado de estado podemos saberlo con esto
+  async validaUserWithEmail() {
+    const app = initializeApp(this.firebaseConfig);
+    //const analytics = getAnalytics(app);
+    const auth = getAuth();
+
+    auth.onAuthStateChanged((user)=>{
+      console.log("user", user);
+      if (user != null) {
+        return {status:'ok', user:user};
+      }else{
+        return {status:'bad', user:null};
+      }
+    });
+
+
   }
 
 }

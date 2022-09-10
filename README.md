@@ -109,6 +109,7 @@ https://platzi.com/tutoriales/1435-firebase-web/8710-instala-y-corre-el-proyecto
 > Gracias al servicio de autenticación de usuarios de Firebase podemos ahorrar mucho tiempo programando estas mismas funcionalidades por nuestra cuenta.
 
 **Como**
+- Primero aqui te dejo la documentación -> https://firebase.google.com/docs/auth/web/password-auth?hl=es&authuser=0
 - Paso 1: Debemos entrar a nuestra consola y habilitar el componenete `Autentication`
   - ![Auto](info/Autentication_0007.png)
   - Escogemos correo y contraseña la cual usaremos 
@@ -184,3 +185,19 @@ npm i @babel/cli @babel/core @babel/node @babel/preset-env nodemon
     "lint": "eslint"
   },
 ```
+
+## Clase 14: Firestore
+
+> Firestore es una base de datos NoSQL en formato JSON, es una herramienta muy flexible y nos permite guardar información sin estructuras o atributos predeterminados, además, es soportado por los servicios de Google Cloud, nuestra aplicación puede multiplicarse en diferentes regiones para aumentar su performance y no tendremos problemas de escalamiento.
+
+> Además del formato JSON, tenemos disponibles algunas nuevas estructuras para manejar la información y construir mejor nuestra base de datos. Firestore también es Cross Platform, es decir, tiene soporte y multiples herramientas para construir aplicaciones en diferentes plataformas de Frontend y Backend, entre estos servicios encontramos el soporte offline.
+
+
+**Resumen:**
+
+- Firestore es una base de datos NoSQL en formato JSON
+- El formato JSON con super poderes, tenemos toda la flexibilidad para utilizar o no los atributos que necesitemos, podemos utilizar otros tipos de estructuras de datos pero al final siempre resulta en JSON
+- Tiene soporte de Google Cloud, es decir, es increíblemente escalable y se multiplica por diferentes regiones para mejorar el performance de nuestras aplicaciones
+- Cross Platform: Soporta y construye herramientas de desarrollo para todas las plataformas (mobile, web y backend) 🎬
+- Tenemos soporte offline 🎉 ⛱
+- Operaciones por lotes, es decir, multiples updates, deletes y todo este tipo de operaciones al mismo tiempo 😮
