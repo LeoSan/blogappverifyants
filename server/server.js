@@ -22,7 +22,7 @@ class Server {
           if ( this.whitelist.includes(origin)) {
             callback(null, true);
           } else {
-            callback(new Error('no permitido'), false);
+            //callback(new Error('no permitido'), false);
           }
         }
       },

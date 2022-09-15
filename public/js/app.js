@@ -52,16 +52,25 @@ const habilitaNuevasAcciones =(data)=>{
 window.addEventListener("load", function(){
   //get-Posts
 
-  var data ={
-    accion:"load"
-  };
+  let postData = {
+    //uid: ,
+    autor: 'cuenca623@gmail.com',
+    titulo: 'Organiza y evalua',
+    descripcion: 'Organiza y evalua',
+    imagenLink: 'https://stock.adobe.com/mx/collections/gIVeC8c73QvgMdMA455up2poRfeU3bxK?asset_id=311174184',
+    videoLink: 'https://stock.adobe.com/mx/collections/gIVeC8c73QvgMdMA455up2poRfeU3bxK?asset_id=311174184',
+    fecha: '2022-09-15'
+}
+
+
   try {
-    fetch(URI_USER+"get-posts",{
+    fetch(URI_USER+"create-post",{
+    //fetch(URI_USER+"get-posts",{
       method:'POST',
       headers:{
           'Content-Type':'application/json',
       },
-      body:JSON.stringify(data)
+      body:JSON.stringify(postData)
     }).then((resp) => resp.json())
     .then((data) => {//Recuerda es una promesa y regresa otra promesa por lo que hay que hacerle doble then para optener lo que necesitamos
 
@@ -80,6 +89,8 @@ window.addEventListener("load", function(){
   console.log(error);
 
 }
+
+
 
 });
 

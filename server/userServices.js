@@ -2,7 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged  } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, doc, setDoc, Timestamp } from 'firebase/firestore/lite';
+
 
 
 class UserServices {
@@ -78,15 +79,41 @@ class UserServices {
   }
 
   //Servicio-Firebase: Me Permite conectar y conultar un Documento dentro de la base de datos de Firebase
+  //Deuda Técnica: como es un proyecto pequeño este metodo deberia estar en una clase aparte dedicada a manejar los posts
   async getPosts() {
     const app = initializeApp(this.firebaseConfig);
     const db = getFirestore(app);
-
+    //const settings = { timestampsInSnapshots : true}
+    //db.settings(settings);
     const postsCol = collection(db, 'posts');
     const postsSnapshot = await getDocs(postsCol);
     const postsList = postsSnapshot.docs.map(doc => doc.data());
     return postsList;
   }
-}
+
+
+//Servicio-Firebase: Me Permite conectar y conultar un Documento dentro de la base de datos de Firebase
+  //Deuda Técnica: como es un proyecto pequeño este metodo deberia estar en una clase aparte dedicada a manejar los posts
+  async createPost(postData) {
+
+    const data = {
+      ... postData,
+      dateExample: Timestamp.fromDate(new Date()),
+    }
+
+    const app = initializeApp(this.firebaseConfig);
+    const db = getFirestore(app);
+    const postsRef = doc(collection(db, "posts"));
+    const resp =  await setDoc(postsRef, data).then(resp=>{
+      return resp;
+    }).catch(err=>{
+      return err;
+    });
+
+    return resp;
+  }
+
+
+}//Fin de la clase
 
 module.exports = UserServices;

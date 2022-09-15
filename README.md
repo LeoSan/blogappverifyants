@@ -203,7 +203,7 @@ npm i @babel/cli @babel/core @babel/node @babel/preset-env nodemon
 - Operaciones por lotes, es decir, multiples updates, deletes y todo este tipo de operaciones al mismo tiempo 😮
 
 
-## Clase 15 - 16: Firebase 
+## Clase 16: Firebase Consultar
 
 **Como**
 - Paso 1: Debemos leer la documentación recuerda esta vaina se actualiza cada sierto tiempo [Documentación](https://firebase.google.com/docs/web/setup?authuser=0&hl=es)
@@ -245,3 +245,38 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 
 - Paso 4: Validamos la lógica implementada y en efecto nos muestra información 
 ![Muestra Datos](info/PasosProyecto_0008.png)
+
+## Clase 17: Firebase Insertar 
+
+**Como**
+- Paso 1: Debemos leer la documentación recuerda esta vaina se actualiza cada sierto tiempo [Documentación](https://firebase.google.com/docs/firestore/manage-data/add-data?hl=es-419)
+
+- Paso 2: Te recomiendo leer la clase 16 antes de insertar 
+- Paso 3: Como siempre debemos importar nuestras funciones para poder insertar Nota: se mezclan con las funciones de consultar asi que ojo porque si no te marcará error.
+``
+import { getFirestore, collection, getDocs, doc, setDoc, Timestamp } from 'firebase/firestore/lite'; 
+`` 
+- Paso 4: usamos fragmento de código  luego será explicado 
+```
+//Servicio-Firebase: Me Permite conectar y conultar un Documento dentro de la base de datos de Firebase
+  //Deuda Técnica: como es un proyecto pequeño este metodo deberia estar en una clase aparte dedicada a manejar los posts
+  async createPost(postData) {
+
+    const data = {
+      ... postData,
+      dateExample: Timestamp.fromDate(new Date()),
+    }
+
+    const app = initializeApp(this.firebaseConfig);
+    const db = getFirestore(app);
+    const postsRef = doc(collection(db, "posts"));
+    const resp =  await setDoc(postsRef, data).then(resp=>{
+      return resp;
+    }).catch(err=>{
+      return err;
+    });
+
+    return resp;
+  }
+```
+  -4.1: Como lo comente en la clase 16: para este ejemplo nos estamos apoyando en API, por lo que creamos nuestra función asyn, recibimos como valor lo que nos envia desde el consumo del API, inicializamos con nuestra llave de configuración, creamos una constante `postsRef` para poder indicar el `db` y a que documentos quremos crear mas colecciones, luego usamos el método `setDoc` que recibe como referencia el `postsRef` y la `data` que enviamos desde el cliente y como es una `promesa` pues usamos el `then` y listo, si te envia un error `"code": "invalid-argument", "name": "FirebaseError" ` por favor checa el import ya que me sucedio ese error cuando estaba referenciando mal el import `import { getFirestore, collection, getDocs, doc, setDoc, Timestamp } from 'firebase/firestore/lite';`
