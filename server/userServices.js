@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged  } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 
 
 class UserServices {
@@ -74,10 +75,18 @@ class UserServices {
         return {status:'bad', user:null};
       }
     });
-
-
   }
 
+  //Servicio-Firebase: Me Permite conectar y conultar un Documento dentro de la base de datos de Firebase
+  async getPosts() {
+    const app = initializeApp(this.firebaseConfig);
+    const db = getFirestore(app);
+
+    const postsCol = collection(db, 'posts');
+    const postsSnapshot = await getDocs(postsCol);
+    const postsList = postsSnapshot.docs.map(doc => doc.data());
+    return postsList;
+  }
 }
 
 module.exports = UserServices;

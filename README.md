@@ -201,3 +201,47 @@ npm i @babel/cli @babel/core @babel/node @babel/preset-env nodemon
 - Cross Platform: Soporta y construye herramientas de desarrollo para todas las plataformas (mobile, web y backend) 🎬
 - Tenemos soporte offline 🎉 ⛱
 - Operaciones por lotes, es decir, multiples updates, deletes y todo este tipo de operaciones al mismo tiempo 😮
+
+
+## Clase 15 - 16: Firebase 
+
+**Como**
+- Paso 1: Debemos leer la documentación recuerda esta vaina se actualiza cada sierto tiempo [Documentación](https://firebase.google.com/docs/web/setup?authuser=0&hl=es)
+
+- Paso 2: Aqui usaremos el paquete para conectarnos a la base de datos debemos ejecutar el instalador: 
+  - Comando `npm install firebase` 
+
+- Paso 3: Debemos conectarnos la mejor manera es creando un config: en algun API para este ejemplo hare  lo siguiente: 
+
+  - Paso 3.1: Debemos acceder al config recuerda es la llave para hacer todo 
+```
+import { initializeApp } from "firebase/app";
+
+const app = initializeApp(this.firebaseConfig);
+
+```
+  - Paso 3.2: Debemos importar lo que necesitamos para este ejemplo lo importamos en nuestro servicio 
+```
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+```
+
+  - Paso 3.3: podemos agregar este fragento de código de esta manera y enseguida ya lo explico. 
+```
+  //Servicio-Firebase: Me Permite conectar y conultar un Documento dentro de la base de datos de Firebase
+  async getPosts() {
+    const app = initializeApp(this.firebaseConfig);
+    const db = getFirestore(app);
+
+    const postsCol = collection(db, 'posts');
+    const postsSnapshot = await getDocs(postsCol);
+    const postsList = postsSnapshot.docs.map(doc => doc.data());
+    return postsList;
+  }
+}
+``` 
+  Paso 3.4: como ver pasa lo siguiente para este ejemplo estoy usando una clase para traer dicha información ya que usare un API,  es una promesa por lo que prevenimos con un async luego usamos una constante `app` que nos ayuda con la inicialización con nuestra `LLAVE` usando esta variable usaremos el metodo importado `getFirestore(app)` incluimos nuestra llave, pero al mismo tiempo usamos una constante `db` donde aqui podremos conectarnos a nuestros `firebase` de nuestro proyecto luego  usamos el método `colecction` previamente importado con el nombre de tu coleccion que creaste previamente en firebase ojo este caso debe ser el primer paso: 
+  ![Primero Paso](info/PasosProyecto_0007.png)  
+  Por ultimo pues creamos nuestro bucle para extaer los datos y lugo presentarlos donde estemos llamando nuestro API 
+
+- Paso 4: Validamos la lógica implementada y en efecto nos muestra información 
+![Muestra Datos](info/PasosProyecto_0008.png)

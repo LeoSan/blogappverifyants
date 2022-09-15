@@ -50,22 +50,36 @@ const habilitaNuevasAcciones =(data)=>{
 //Definición de Eventos
 
 window.addEventListener("load", function(){
-  //everything is fully loaded, don't use me if you can use DOMContentLoaded
-  console.log("cargo");
+  //get-Posts
 
-    try {
-      fetch(URI_USER+"valida-login")
-      .then((resp) => resp.json())
-      .then((data) => {
-        console.log(data);
+  var data ={
+    accion:"load"
+  };
+  try {
+    fetch(URI_USER+"get-posts",{
+      method:'POST',
+      headers:{
+          'Content-Type':'application/json',
+      },
+      body:JSON.stringify(data)
+    }).then((resp) => resp.json())
+    .then((data) => {//Recuerda es una promesa y regresa otra promesa por lo que hay que hacerle doble then para optener lo que necesitamos
 
-      }).catch(error=>{
-        console.log("catch", error);
-      });
-    } catch (error) {
+    if(data.status=='ok'){
+      console.log(data.datos);
+
+    }else{
+      console.log(data.mensaje);
+    }
+
+    }).catch(error=>{
       console.log(error);
 
-    }
+    });
+} catch (error) {
+  console.log(error);
+
+}
 
 });
 

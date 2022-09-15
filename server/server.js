@@ -16,7 +16,7 @@ class Server {
       this.port  = 5500,
       this.seguridad  = '',
       this.publicPath  = path.resolve(__dirname, '../public'),
-      this.whitelist = ['http://localhost:5500/', 'https://blogappverifyants.firebaseapp.com/', 'https://blogappverifyants.firebaseapp.com/'], //damos permiso solo a estas direcciones
+      this.whitelist = ['http://localhost:5500/', 'https://blogappverifyants.firebaseapp.com/', 'https://blogappverifyants.firebaseapp.com/', 'http://localhost:5500/api/v1/user/get-posts'], //damos permiso solo a estas direcciones
       this.optionCors = {
         origin: (origin, callback) => { // Otra forma mas arcaica pero interesante
           if ( this.whitelist.includes(origin)) {

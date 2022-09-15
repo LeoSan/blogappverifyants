@@ -14,7 +14,7 @@ router.get('/valida-login',  async (req = request, res = response) => {
       res.status(200).json({status:'ok', valida:valida});
     } catch (error) {
       console.log(error);
-      res.status(404).json({"valida Error->":error});
+      res.status(404).json({status:'bad',"mensaje":error});
 
     }
 
@@ -27,7 +27,7 @@ router.post('/login',  async (req = request, res = response, next) => {
       const user = await service.signInWithEmail(body);
       res.status(200).json({status:'ok', nickname:user.email});
     } catch (error) {
-      res.status(404).json({"mensaje Error->":error});
+      res.status(404).json({status:'bad',"mensaje":error});
       //next(error); //se agrega el next para atrapar de forma explicita el error con el middleware
     }
     //next(); // se utiliza para que se ejecute el router.get
@@ -42,7 +42,21 @@ router.post('/registro',  async (req = request, res = response, next) => {
       const user = await service.createUserWithEmail(body);
       res.status(200).json({status:'ok', user});
     } catch (error) {
-      res.status(404).json({"mensaje Error->":error});
+      res.status(404).json({status:'bad',"mensaje":error});
+      //next(error); //se agrega el next para atrapar de forma explicita el error con el middleware
+    }
+    //next(); // se utiliza para que se ejecute el router.get
+});
+
+//Metodo: Router que conecta con el server con la Coleccion Post ACCESO A BASE DATOS
+router.post('/get-posts',  async (req = request, res = response, next) => {
+
+  const body = req.body;
+  try {
+      const posts = await service.getPosts(body);
+      res.status(200).json({status:'ok', datos:posts});
+    } catch (error) {
+      res.status(404).json({status:'bad', "mensaje":error});
       //next(error); //se agrega el next para atrapar de forma explicita el error con el middleware
     }
     //next(); // se utiliza para que se ejecute el router.get
