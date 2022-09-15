@@ -64,8 +64,8 @@ window.addEventListener("load", function(){
 
 
   try {
-    fetch(URI_USER+"create-post",{
-    //fetch(URI_USER+"get-posts",{
+    //fetch(URI_USER+"create-post",{
+    fetch(URI_USER+"get-posts",{
       method:'POST',
       headers:{
           'Content-Type':'application/json',

@@ -251,6 +251,8 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 **Como**
 - Paso 1: Debemos leer la documentación recuerda esta vaina se actualiza cada sierto tiempo [Documentación](https://firebase.google.com/docs/firestore/manage-data/add-data?hl=es-419)
 
+- Otra referencia Util -> https://firebase.google.com/docs/reference/js/v8/firebase.database.Reference 
+
 - Paso 2: Te recomiendo leer la clase 16 antes de insertar 
 - Paso 3: Como siempre debemos importar nuestras funciones para poder insertar Nota: se mezclan con las funciones de consultar asi que ojo porque si no te marcará error.
 ``
