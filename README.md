@@ -282,3 +282,12 @@ import { getFirestore, collection, getDocs, doc, setDoc, Timestamp } from 'fireb
   }
 ```
   -4.1: Como lo comente en la clase 16: para este ejemplo nos estamos apoyando en API, por lo que creamos nuestra función asyn, recibimos como valor lo que nos envia desde el consumo del API, inicializamos con nuestra llave de configuración, creamos una constante `postsRef` para poder indicar el `db` y a que documentos quremos crear mas colecciones, luego usamos el método `setDoc` que recibe como referencia el `postsRef` y la `data` que enviamos desde el cliente y como es una `promesa` pues usamos el `then` y listo, si te envia un error `"code": "invalid-argument", "name": "FirebaseError" ` por favor checa el import ya que me sucedio ese error cuando estaba referenciando mal el import `import { getFirestore, collection, getDocs, doc, setDoc, Timestamp } from 'firebase/firestore/lite';`
+
+
+## Clase 17: Firebase Editar y Eliminar 
+
+
+## Clase 18-19-20-21: Firebase REglas de Negocio e Indexes 
+
+
+## Clase 22: Firebase Subir Archivos Fisicos 

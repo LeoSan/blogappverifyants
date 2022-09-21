@@ -7,17 +7,19 @@ let btnIniciarSesion = document.getElementById("btnIniciarSesion");
 let btnRegistrarse = document.getElementById("btnRegistrarse");
 let btnModalPost = document.getElementById("btnModalPost");
 let btnMisPost = document.getElementById("btnMisPost");
+
+//Definición Objeto Contenedores
 let saludoUsuario = document.getElementById("saludoUsuario");
 let divBtnInicio = document.getElementById("divBtnInicio");
-
+let contentPosts = document.getElementById("contentPosts");
 
 //Definición de objetos Botones Acciones
 let btnRegistroEmail = document.getElementById("btnRegistroEmail");
 let btnInicioEmail = document.getElementById("btnInicioEmail");
+let btnRegistroPost = document.getElementById("btnRegistroPost");
 
 
 //Definición de Metodos
-
 const cerrarModal=(nombreModal)=>{
   var elems  = document.getElementById(nombreModal);
   const instance = M.Modal.init(elems, {dismissible: true});
@@ -31,40 +33,51 @@ const toggleMensagge =(id, remove, add, msg)=>{
 };
 
 const habilitaNuevasAcciones =(data)=>{
-  let acciones='';
   if (data.status=='ok'){
-    acciones +=`<li><a id="btnMisPost">Mis Posts</a></li>`;
-    acciones +=`<li><a id="btnModalPost">Realiza un Post</a></li>`;
-    acciones +=`<li><a id="btnTodoPost">Todos los Posts</a></li>`;
-    //acciones +=`<li><a href="index.html#footer">Contactenos</a></li>`;
-    divBtnInicio.style.visibility = "hidden";
+    localStorage.setItem('valLogin', data.status );
+    localStorage.setItem('email', data.nickname );
+
     saludoUsuario.innerHTML =`<h4>Hi, <span id="correoUsuario">${data.nickname}</span> , Bienvenid@ </h4>`;
+    divBtnInicio.style.visibility = "hidden";
+    btnModalPost.style.visibility = "visible";
+    btnMisPost.style.visibility = "visible";
+
   }else{
-    acciones +=`<li><a id="btnTodoPost">Todos los Posts</a></li>`;
-    acciones +=`<li><a href="index.html#footer">Contactenos</a></li>`;
+    localStorage.removeItem('valLogin');
+    localStorage.removeItem('email');
+
     divBtnInicio.style.visibility = "visible";
+    btnModalPost.style.visibility = "hidden";
+    btnMisPost.style.visibility = "hidden";
   }
-  return acciones;
 };
 
-//Definición de Eventos
+const validaLogin = ()=>{
+  const valLogin = localStorage.getItem('valLogin');
+  const email = localStorage.getItem('email');
 
-window.addEventListener("load", function(){
-  //get-Posts
+  if(valLogin == 'ok'){
+    //Aqui valido
+    saludoUsuario.innerHTML =`<h4>Hi, <span id="correoUsuario">${email}</span> , Bienvenid@ </h4>`;
+    divBtnInicio.style.visibility = "hidden";
+    btnModalPost.style.visibility = "visible";
+    btnMisPost.style.visibility = "visible";
 
+  }else{
+
+    divBtnInicio.style.visibility = "visible";
+    btnModalPost.style.visibility = "hidden";
+    btnMisPost.style.visibility = "hidden";
+  }
+};
+
+
+function getPost(filtro){
   let postData = {
-    //uid: ,
-    autor: 'cuenca623@gmail.com',
-    titulo: 'Organiza y evalua',
-    descripcion: 'Organiza y evalua',
-    imagenLink: 'https://stock.adobe.com/mx/collections/gIVeC8c73QvgMdMA455up2poRfeU3bxK?asset_id=311174184',
-    videoLink: 'https://stock.adobe.com/mx/collections/gIVeC8c73QvgMdMA455up2poRfeU3bxK?asset_id=311174184',
-    fecha: '2022-09-15'
-}
-
+    autor: localStorage.getItem('email'),
+  };
 
   try {
-    //fetch(URI_USER+"create-post",{
     fetch(URI_USER+"get-posts",{
       method:'POST',
       headers:{
@@ -75,7 +88,14 @@ window.addEventListener("load", function(){
     .then((data) => {//Recuerda es una promesa y regresa otra promesa por lo que hay que hacerle doble then para optener lo que necesitamos
 
     if(data.status=='ok'){
-      console.log(data.datos);
+      let postHtml = '';
+      //console.log(data.datos);
+      data.datos.forEach(element => {
+        console.log(element.dateExample);
+         postHtml += obtenerPostTemplate( element.autor,  element.titulo,  element.descripcion,   element.videoLink,  element.imagenLink,  obtenerFecha(element.dateExample));
+      });
+      //Join todos los  post
+      contentPosts.innerHTML= postHtml;
 
     }else{
       console.log(data.mensaje);
@@ -85,148 +105,282 @@ window.addEventListener("load", function(){
       console.log(error);
 
     });
-} catch (error) {
-  console.log(error);
-
+  } catch (error) {
+    console.log(error);
+  }
 }
 
+//Definición de Eventos
+    window.addEventListener("load", function(){
+      validaLogin();
+      getPost(false);
+    });
 
+    btnInicioSesion.addEventListener("click", (e)=> {
+      cerrarModal('modalRegistro');
 
-});
-
-
-  btnInicioSesion.addEventListener("click", function () {
-    cerrarModal('modalRegistro');
-
-    var elems  = document.getElementById('modalSesion');
-    const instance = M.Modal.init(elems, {dismissible: true});
-    instance.open();
-  });
-
-  btnIniciarSesion.addEventListener("click", function () {
-    cerrarModal('modalRegistro');
-
-    var elems  = document.getElementById('modalSesion');
-    const instance = M.Modal.init(elems, {dismissible: true});
-    instance.open();
-  });
-
-  btnRegistrarse.addEventListener("click", function () {
-    cerrarModal('modalSesion');
-
-    var elems  = document.getElementById('modalRegistro');
-    const instance = M.Modal.init(elems, {dismissible: true});
-    instance.open();
-  });
-
-  if (btnModalPost){
-    btnModalPost.addEventListener("click", function () {
-      cerrarModal('modalSesion');
-
-      var elems  = document.getElementById('modalPost');
+      var elems  = document.getElementById('modalSesion');
       const instance = M.Modal.init(elems, {dismissible: true});
       instance.open();
     });
-  }
 
-  if (btnMisPost){
-    btnMisPost.addEventListener("click", function () {
-      console.log("consulto mis opost usando firebase ");
+    btnIniciarSesion.addEventListener("click", (e)=> {
+      cerrarModal('modalRegistro');
+
+      var elems  = document.getElementById('modalSesion');
+      const instance = M.Modal.init(elems, {dismissible: true});
+      instance.open();
+    });
+
+    btnRegistrarse.addEventListener("click", (e)=> {
+      cerrarModal('modalSesion');
+
+      var elems  = document.getElementById('modalRegistro');
+      const instance = M.Modal.init(elems, {dismissible: true});
+      instance.open();
+    });
+
+    btnModalPost.addEventListener("click", (e)=> {
+      cerrarModal('modalSesion');
+      var elems  = document.getElementById('modalPost');
+      const instance = M.Modal.init(elems, {dismissible: true});
+      instance.open();
+    }, true);
+
+
+  //Evento APIS
+
+    btnRegistroEmail.addEventListener("click", (e)=> {
+      var data ={
+        nombre:document.getElementById('nombreContactoReg').value,
+        email:document.getElementById('emailContactoReg').value,
+        password:document.getElementById('passwordReg').value
+      };
+
+
+      if(data.email == '' || data.password == '' ){
+        toggleMensagge("msjApiRegistro","message-success", "message-fall", "Debes llenar los campos por favor.");
+        return;
+      }
+
+      try {
+          fetch(URI_USER+"registro",{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+            },
+            body:JSON.stringify(data)
+          }).then((resp) => resp.json())
+          .then((data) => {//Recuerda es una promesa y regresa otra promesa por lo que hay que hacerle doble then para optener lo que necesitamos
+
+          if(data.status=='ok'){
+              toggleMensagge("msjApiRegistro","message-fall", "message-success", "Se registró de manera exitosa, ahora inicia sesión con tu cuenta.");
+              document.getElementById('nombreContactoReg').value="",
+              document.getElementById('emailContactoReg').value="",
+              document.getElementById('passwordReg').value="";
+            }else{
+              toggleMensagge("msjApiRegistro","message-success","message-fall", "Hubo un error en la conexión.");
+            }
+
+          }).catch(error=>{
+            toggleMensagge("msjApiRegistro","message-success","message-fall", "Hubo un error en la conexión.");
+            console.log(error);
+          });
+      } catch (error) {
+        console.log(error);
+        toggleMensagge("msjApiRegistro","message-success","message-fall", "Hubo un error en la conexión.");
+      }
 
     });
-  }
+
+    btnInicioEmail.addEventListener("click", (e)=> {
+      var data ={
+        email:document.getElementById('emailSesion').value,
+        password:document.getElementById('passwordSesion').value
+      };
 
 
-  btnRegistroEmail.addEventListener("click", function () {
-    var data ={
-      nombre:document.getElementById('nombreContactoReg').value,
-      email:document.getElementById('emailContactoReg').value,
-      password:document.getElementById('passwordReg').value
-    };
+      if(data.email == '' || data.password == '' ){
+        toggleMensagge("msjApi","message-success", "message-fall", "Debes llenar los campos por favor.");
+        return;
+      }
+
+      try {
+              fetch(URI_USER+"login",{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                },
+                body:JSON.stringify(data)
+              }).then((resp) => resp.json())
+              .then((data) => {
+
+                if(data.status=='ok'){
+                    toggleMensagge("msjApi","message-fall", "message-success", "Inicio de sesión correcto, ahora podras postear y ver tus post.");
+                    document.getElementById('emailSesion').value="",
+                    document.getElementById('passwordSesion').value="";
+                    //habilito Acciones
+                    habilitaNuevasAcciones(data);
+
+                      setTimeout(() => {
+                      cerrarModal('modalSesion');
+                      }, 3000);
+                  }else{
+                    toggleMensagge("msjApi","message-success","message-fall", "Hubo un error en la conexión.");
+                  }
+              }).catch(error=>{
+                toggleMensagge("msjApi","message-success","message-fall", "Hubo un error en la conexión.");
+                console.log("catch", error);
+              });
+      } catch (error) {
+        console.log(error);
+        toggleMensagge("msjApi","message-success","message-fall", "Hubo un error en la conexión.");
+      }
 
 
-    if(data.email == '' || data.password == '' ){
-      toggleMensagge("msjApiRegistro","message-success", "message-fall", "Debes llenar los campos por favor.");
-      return;
-    }
 
-    try {
-        fetch(URI_USER+"registro",{
+    });
+
+    btnRegistroPost.addEventListener("click", (e)=> {
+      e.preventDefault();
+      let postData = {
+        autor: localStorage.getItem('email'),
+        titulo: document.getElementById('tituloNewPost').value,
+        descripcion: document.getElementById('descripcionNewPost').value,
+        imagenLink: document.getElementById('linkVideoNewPost').value, //'https://stock.adobe.com/mx/collections/gIVeC8c73QvgMdMA455up2poRfeU3bxK?asset_id=311174184',
+        videoLink: 'https://stock.adobe.com/mx/collections/gIVeC8c73QvgMdMA455up2poRfeU3bxK?asset_id=311174184',
+      }
+
+      if(postData.titulo == '' || postData.descripcion == '' || postData.imagenLink == '' ){
+        toggleMensagge("msjApi","message-success", "message-fall", "Debes llenar los campos por favor.");
+        return;
+      }
+      try {
+        fetch(URI_USER+"create-post",{
           method:'POST',
           headers:{
               'Content-Type':'application/json',
           },
-          body:JSON.stringify(data)
+          body:JSON.stringify(postData)
         }).then((resp) => resp.json())
         .then((data) => {//Recuerda es una promesa y regresa otra promesa por lo que hay que hacerle doble then para optener lo que necesitamos
 
         if(data.status=='ok'){
-            toggleMensagge("msjApiRegistro","message-fall", "message-success", "Se registró de manera exitosa, ahora inicia sesión con tu cuenta.");
-            document.getElementById('nombreContactoReg').value="",
-            document.getElementById('emailContactoReg').value="",
-            document.getElementById('passwordReg').value="";
-          }else{
-            toggleMensagge("msjApiRegistro","message-success","message-fall", "Hubo un error en la conexión.");
-          }
+          console.log(data.datos);
+          toggleMensagge("msjApiPost","message-fall", "message-success", "Se registró de manera exitosa.");
+
+          setTimeout(() => {
+            cerrarModal('modalRegistro');
+            }, 3000);
+
+        }else{
+          console.log(data.mensaje);
+          toggleMensagge("msjApiPost","message-success","message-fall", "Hubo un error en la conexión.");
+        }
 
         }).catch(error=>{
-          toggleMensagge("msjApiRegistro","message-success","message-fall", "Hubo un error en la conexión.");
           console.log(error);
+          toggleMensagge("msjApiPost","message-success","message-fall", "Hubo un error en la conexión.");
+
         });
     } catch (error) {
       console.log(error);
-      toggleMensagge("msjApiRegistro","message-success","message-fall", "Hubo un error en la conexión.");
+      toggleMensagge("msjApiPost","message-success","message-fall", "Hubo un error en la conexión.");
     }
-
-  });
-
-  btnInicioEmail.addEventListener("click", function () {
-    var data ={
-      email:document.getElementById('emailSesion').value,
-      password:document.getElementById('passwordSesion').value
-    };
+    });
 
 
-    if(data.email == '' || data.password == '' ){
-      toggleMensagge("msjApi","message-success", "message-fall", "Debes llenar los campos por favor.");
-      return;
-    }
+function obtenerPostTemplate (
+  autor,
+  titulo,
+  descripcion,
+  videoLink,
+  imagenLink,
+  fecha
+) {
+  if (imagenLink ) {
+    return `<article class="post">
+          <div class="post-titulo">
+              <h5>${titulo}</h5>
+          </div>
+          <div class="post-calificacion">
+              <a class="post-estrellita-llena" href="*"></a>
+              <a class="post-estrellita-llena" href="*"></a>
+              <a class="post-estrellita-llena" href="*"></a>
+              <a class="post-estrellita-llena" href="*"></a>
+              <a class="post-estrellita-vacia" href="*"></a>
+          </div>
+          <div class="post-video">
+              <img id="imgVideo" src='${imagenLink}' class="post-imagen-video"
+                  alt="Imagen Video">
+          </div>
+          <div class="post-videolink">
+              <a href="${videoLink}" target="blank">Ver Video</a>
+          </div>
+          <div class="post-descripcion">
+              <p>${descripcion}</p>
+          </div>
+          <div class="post-footer container">
+              <div class="row">
+                  <div class="col m6">
+                      Fecha: ${fecha}
+                  </div>
+                  <div class="col m6">
+                      Autor: ${autor}
+                  </div>
+              </div>
+          </div>
+      </article>`
+  }
 
-    try {
-            fetch(URI_USER+"login",{
-              method:'POST',
-              headers:{
-                  'Content-Type':'application/json',
-              },
-              body:JSON.stringify(data)
-            }).then((resp) => resp.json())
-            .then((data) => {
+  return `<article class="post">
+              <div class="post-titulo">
+                  <h5>${titulo}</h5>
+              </div>
+              <div class="post-calificacion">
+                  <a class="post-estrellita-llena" href="*"></a>
+                  <a class="post-estrellita-llena" href="*"></a>
+                  <a class="post-estrellita-llena" href="*"></a>
+                  <a class="post-estrellita-llena" href="*"></a>
+                  <a class="post-estrellita-vacia" href="*"></a>
+              </div>
+              <div class="post-video">
+                  <iframe type="text/html" width="500" height="385" src='${videoLink}'
+                      frameborder="0"></iframe>
+                  </figure>
+              </div>
+              <div class="post-videolink">
+                  Video
+              </div>
+              <div class="post-descripcion">
+                  <p>${descripcion}</p>
+              </div>
+              <div class="post-footer container">
+                  <div class="row">
+                      <div class="col m6">
+                          Fecha: ${fecha}
+                      </div>
+                      <div class="col m6">
+                          Autor: ${autor}
+                      </div>
+                  </div>
+              </div>
+          </article>`
+}
 
-              if(data.status=='ok'){
-                  toggleMensagge("msjApi","message-fall", "message-success", "Inicio de sesión correcto, ahora podras postear y ver tus post.");
-                  document.getElementById('emailSesion').value="",
-                  document.getElementById('passwordSesion').value="";
+function obtenerFecha (timeStamp) {
+  const d = new Date(timeStamp);
+  console.log("tiempo", d);
+  /*let month = '' + (d.getMonth() + 1);
+  let day = '' + d.getDate();
+  let year = d.getFullYear();
 
-                  document.getElementById("menuAccion").innerHTML = habilitaNuevasAcciones(data);
-
-                    setTimeout(() => {
-                    cerrarModal('modalSesion');
-                    }, 5000);
-                }else{
-                  toggleMensagge("msjApi","message-success","message-fall", "Hubo un error en la conexión.");
-                }
-            }).catch(error=>{
-              toggleMensagge("msjApi","message-success","message-fall", "Hubo un error en la conexión.");
-              console.log("catch", error);
-            });
-    } catch (error) {
-      console.log(error);
-      toggleMensagge("msjApi","message-success","message-fall", "Hubo un error en la conexión.");
-    }
-
-
-
-  });
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+  */
+  //return [day, month, year].join('/');
+  return timeStamp;
+}
 
 
 
