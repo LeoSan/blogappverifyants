@@ -7,16 +7,19 @@ let btnIniciarSesion = document.getElementById("btnIniciarSesion");
 let btnRegistrarse = document.getElementById("btnRegistrarse");
 let btnModalPost = document.getElementById("btnModalPost");
 let btnMisPost = document.getElementById("btnMisPost");
+let btnUploadFile = document.getElementById("btnUploadFile");
 
 //Definición Objeto Contenedores
 let saludoUsuario = document.getElementById("saludoUsuario");
 let divBtnInicio = document.getElementById("divBtnInicio");
 let contentPosts = document.getElementById("contentPosts");
+let divBtnSalir = document.getElementById("divBtnSalir");
 
 //Definición de objetos Botones Acciones
 let btnRegistroEmail = document.getElementById("btnRegistroEmail");
 let btnInicioEmail = document.getElementById("btnInicioEmail");
 let btnRegistroPost = document.getElementById("btnRegistroPost");
+let btnSalirSesion = document.getElementById("btnSalirSesion");
 
 
 //Definición de Metodos
@@ -37,16 +40,21 @@ const habilitaNuevasAcciones =(data)=>{
     localStorage.setItem('valLogin', data.status );
     localStorage.setItem('email', data.nickname );
 
-    saludoUsuario.innerHTML =`<h4>Hi, <span id="correoUsuario">${data.nickname}</span> , Bienvenid@ </h4>`;
+    saludoUsuario.innerHTML =`<h4>Hi, <span id="correoUsuario">${data.nickname}</span> </h4>`;
     divBtnInicio.style.visibility = "hidden";
+    divBtnSalir.style.visibility = "visible";
+
     btnModalPost.style.visibility = "visible";
     btnMisPost.style.visibility = "visible";
+
 
   }else{
     localStorage.removeItem('valLogin');
     localStorage.removeItem('email');
 
     divBtnInicio.style.visibility = "visible";
+    divBtnSalir.style.visibility = "hidden";
+
     btnModalPost.style.visibility = "hidden";
     btnMisPost.style.visibility = "hidden";
   }
@@ -58,14 +66,16 @@ const validaLogin = ()=>{
 
   if(valLogin == 'ok'){
     //Aqui valido
-    saludoUsuario.innerHTML =`<h4>Hi, <span id="correoUsuario">${email}</span> , Bienvenid@ </h4>`;
+    saludoUsuario.innerHTML =`<h4>Hi, <span id="correoUsuario">${email}</span> </h4>`;
     divBtnInicio.style.visibility = "hidden";
+    divBtnSalir.style.visibility = "visible";
+
     btnModalPost.style.visibility = "visible";
     btnMisPost.style.visibility = "visible";
-
   }else{
-
     divBtnInicio.style.visibility = "visible";
+    divBtnSalir.style.visibility = "hidden";
+
     btnModalPost.style.visibility = "hidden";
     btnMisPost.style.visibility = "hidden";
   }
@@ -240,6 +250,13 @@ function getPost(filtro){
 
 
     });
+    btnSalirSesion.addEventListener("click", (e)=> {
+      e.preventDefault();
+      localStorage.removeItem('valLogin');
+      localStorage.removeItem('email');
+
+      window.location.href ="http://localhost:5500/";
+    });
 
     btnRegistroPost.addEventListener("click", (e)=> {
       e.preventDefault();
@@ -249,9 +266,10 @@ function getPost(filtro){
         descripcion: document.getElementById('descripcionNewPost').value,
         imagenLink: document.getElementById('linkVideoNewPost').value, //'https://stock.adobe.com/mx/collections/gIVeC8c73QvgMdMA455up2poRfeU3bxK?asset_id=311174184',
         videoLink: 'https://stock.adobe.com/mx/collections/gIVeC8c73QvgMdMA455up2poRfeU3bxK?asset_id=311174184',
+        file:btnUploadFile.files[0],
       }
 
-      if(postData.titulo == '' || postData.descripcion == '' || postData.imagenLink == '' ){
+      if(postData.titulo === '' || postData.descripcion === '' || postData.imagenLink === '' ){
         toggleMensagge("msjApi","message-success", "message-fall", "Debes llenar los campos por favor.");
         return;
       }
@@ -270,17 +288,13 @@ function getPost(filtro){
           toggleMensagge("msjApiPost","message-fall", "message-success", "Se registró de manera exitosa.");
 
           setTimeout(() => {
-            cerrarModal('modalRegistro');
-            }, 3000);
+            //window.location.href ="http://localhost:5500/";
+          }, 3000);
 
         }else{
           console.log(data.mensaje);
           toggleMensagge("msjApiPost","message-success","message-fall", "Hubo un error en la conexión.");
         }
-
-        }).catch(error=>{
-          console.log(error);
-          toggleMensagge("msjApiPost","message-success","message-fall", "Hubo un error en la conexión.");
 
         });
     } catch (error) {

@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged  } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, getDocs, doc, setDoc, Timestamp } from 'firebase/firestore/lite';
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 
 
@@ -101,11 +102,31 @@ class UserServices {
       dateExample: Timestamp.fromDate(new Date()),
     }
 
+
+    console.log("data Create",data);
+
+    return false;
+
+
     const app = initializeApp(this.firebaseConfig);
     const db = getFirestore(app);
     const postsRef = doc(collection(db, "posts"));
     const resp =  await setDoc(postsRef, data).then(resp=>{
-      return resp;
+
+
+    //Subir archivos
+    const storage = getStorage();
+    const storageRef = ref(storage, 'images');
+
+    // 'file' comes from the Blob or File API
+    const file = uploadBytes(storageRef, data.file).then((snapshot) => {
+      console.log('Uploaded a blob or file!');
+    });
+
+    console.log("data Create",file);
+
+    return resp;
+
     }).catch(err=>{
       return err;
     });
