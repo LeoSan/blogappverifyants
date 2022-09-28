@@ -4,6 +4,7 @@ const express     = require("express");
 const cors        = require('cors');
 const path        = require('path');
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 
 //Importo los router
 const routerApi = require('./routers');
@@ -30,12 +31,13 @@ class Server {
       //rutas de aplicación
       this.routes(),
       //midlewares (van siempre despues del router)
-      this.midlewares()
+      this.midlewares();
     }
 
     routes(){
       //Habilitar leer los valores de un body del raw -> Esta manera es de enviar json a los apis
       this.app.use(express.json());
+      this.app.use(fileUpload());
       this.app.use(bodyParser.json()); // admitir cuerpos codificados json
       this.app.use(bodyParser.urlencoded({ extended: true })); //  admitir cuerpos codificados json
 

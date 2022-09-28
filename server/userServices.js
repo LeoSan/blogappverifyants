@@ -6,7 +6,7 @@ import { getFirestore, collection, getDocs, doc, setDoc, Timestamp } from 'fireb
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 
-
+//Clase
 class UserServices {
 
   constructor(){
@@ -102,36 +102,40 @@ class UserServices {
       dateExample: Timestamp.fromDate(new Date()),
     }
 
-
-    console.log("data Create",data);
-
-    return false;
-
-
     const app = initializeApp(this.firebaseConfig);
     const db = getFirestore(app);
     const postsRef = doc(collection(db, "posts"));
     const resp =  await setDoc(postsRef, data).then(resp=>{
-
-
-    //Subir archivos
-    const storage = getStorage();
-    const storageRef = ref(storage, 'images');
-
-    // 'file' comes from the Blob or File API
-    const file = uploadBytes(storageRef, data.file).then((snapshot) => {
-      console.log('Uploaded a blob or file!');
-    });
-
-    console.log("data Create",file);
-
-    return resp;
-
+      return resp;
     }).catch(err=>{
       return err;
     });
 
     return resp;
+  }
+//Servicio-Firebase: Me Permite conectar y conultar un Documento dentro de la base de datos de Firebase
+  //Deuda Técnica: como es un proyecto pequeño este metodo deberia estar en una clase aparte dedicada a manejar los posts
+  async uploadStorage(postData) {
+
+    console.log("data",postData);
+
+    const file = postData;
+    const app = initializeApp(this.firebaseConfig);
+    const storage = getStorage();
+    const storageRef = ref(storage, 'some-child');
+
+    console.log("file->",file);
+    return false;
+
+    // 'file' comes from the Blob or File API
+    const upload = uploadBytes(storageRef, file).then((snapshot) => {
+      console.log('Uploaded a blob or file!');
+    });
+
+    console.log("upload->",upload);
+
+
+    //return resp;
   }
 
 

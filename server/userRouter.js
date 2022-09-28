@@ -78,4 +78,21 @@ router.post('/create-post',  async (req = request, res = response, next) => {
     //next(); // se utiliza para que se ejecute el router.get
 });
 
+//Metodo: Router que conecta con el server e inserta un valor en algun documento.
+//Deuda Tecnica: como es un proyecto pequeño este metodo deberia estar en una clase aparte dedicada a manejar los posts
+router.post('/upload',  async (req = request, res = response, next) => {
+
+  const body = req.files.file;
+  console.log("body",body);
+
+  try {
+      const upload = await service.uploadStorage(body);
+      res.status(200).json({status:'ok', datos:upload});
+    } catch (error) {
+      res.status(404).json({status:'bad', "mensaje":error});
+
+    }
+
+});
+
 module.exports = router;

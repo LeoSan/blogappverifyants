@@ -82,43 +82,43 @@ const validaLogin = ()=>{
 };
 
 
-function getPost(filtro){
-  let postData = {
-    autor: localStorage.getItem('email'),
-  };
+  function getPost(filtro){
+    let postData = {
+      autor: localStorage.getItem('email'),
+    };
 
-  try {
-    fetch(URI_USER+"get-posts",{
-      method:'POST',
-      headers:{
-          'Content-Type':'application/json',
-      },
-      body:JSON.stringify(postData)
-    }).then((resp) => resp.json())
-    .then((data) => {//Recuerda es una promesa y regresa otra promesa por lo que hay que hacerle doble then para optener lo que necesitamos
+    try {
+      fetch(URI_USER+"get-posts",{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json',
+        },
+        body:JSON.stringify(postData)
+      }).then((resp) => resp.json())
+      .then((data) => {//Recuerda es una promesa y regresa otra promesa por lo que hay que hacerle doble then para optener lo que necesitamos
 
-    if(data.status=='ok'){
-      let postHtml = '';
-      //console.log(data.datos);
-      data.datos.forEach(element => {
-        console.log(element.dateExample);
-         postHtml += obtenerPostTemplate( element.autor,  element.titulo,  element.descripcion,   element.videoLink,  element.imagenLink,  obtenerFecha(element.dateExample));
+      if(data.status=='ok'){
+        let postHtml = '';
+        //console.log(data.datos);
+        data.datos.forEach(element => {
+          console.log(element.dateExample);
+          postHtml += obtenerPostTemplate( element.autor,  element.titulo,  element.descripcion,   element.videoLink,  element.imagenLink,  obtenerFecha(element.dateExample));
+        });
+        //Join todos los  post
+        contentPosts.innerHTML= postHtml;
+
+      }else{
+        console.log(data.mensaje);
+      }
+
+      }).catch(error=>{
+        console.log(error);
+
       });
-      //Join todos los  post
-      contentPosts.innerHTML= postHtml;
-
-    }else{
-      console.log(data.mensaje);
-    }
-
-    }).catch(error=>{
+    } catch (error) {
       console.log(error);
-
-    });
-  } catch (error) {
-    console.log(error);
+    }
   }
-}
 
 //Definición de Eventos
     window.addEventListener("load", function(){
@@ -257,17 +257,16 @@ function getPost(filtro){
 
       window.location.href ="http://localhost:5500/";
     });
-
     btnRegistroPost.addEventListener("click", (e)=> {
       e.preventDefault();
+
       let postData = {
         autor: localStorage.getItem('email'),
         titulo: document.getElementById('tituloNewPost').value,
         descripcion: document.getElementById('descripcionNewPost').value,
         imagenLink: document.getElementById('linkVideoNewPost').value, //'https://stock.adobe.com/mx/collections/gIVeC8c73QvgMdMA455up2poRfeU3bxK?asset_id=311174184',
         videoLink: 'https://stock.adobe.com/mx/collections/gIVeC8c73QvgMdMA455up2poRfeU3bxK?asset_id=311174184',
-        file:btnUploadFile.files[0],
-      }
+      };
 
       if(postData.titulo === '' || postData.descripcion === '' || postData.imagenLink === '' ){
         toggleMensagge("msjApi","message-success", "message-fall", "Debes llenar los campos por favor.");
@@ -301,6 +300,33 @@ function getPost(filtro){
       console.log(error);
       toggleMensagge("msjApiPost","message-success","message-fall", "Hubo un error en la conexión.");
     }
+    });
+
+    btnUploadFile.addEventListener("change", (e)=> {
+      e.preventDefault();
+      let formData = new FormData();
+      formData.append("fileupload", btnUploadFile.files[0]);
+      const file = btnUploadFile.files[0];
+
+      try {
+
+        fetch(URI_USER+"upload",{
+          method:'POST',
+          body:formData
+        }).then((resp) => resp.json())
+        .then((data) => {//Recuerda es una promesa y regresa otra promesa por lo que hay que hacerle doble then para optener lo que necesitamos
+
+          console.log(data);
+
+        });
+
+    } catch (error) {
+      console.log(error);
+      //toggleMensagge("msjApiPost","message-success","message-fall", "Hubo un error en la conexión.");
+    }
+
+
+
     });
 
 
