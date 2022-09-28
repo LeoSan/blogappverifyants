@@ -82,7 +82,7 @@ router.post('/create-post',  async (req = request, res = response, next) => {
 //Deuda Tecnica: como es un proyecto pequeño este metodo deberia estar en una clase aparte dedicada a manejar los posts
 router.post('/upload',  async (req = request, res = response, next) => {
 
-  const body = req.files.file;
+  const body = req.files;
   console.log("body",body);
 
   try {

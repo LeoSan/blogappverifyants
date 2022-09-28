@@ -291,3 +291,87 @@ import { getFirestore, collection, getDocs, doc, setDoc, Timestamp } from 'fireb
 
 
 ## Clase 22: Firebase Subir Archivos Fisicos 
+
+
+## Clase 27: Redirects, rewrites y headers
+
+
+**public (String):** 
+- Especifica que directorio va a ser el que se va a desplegar en Firebase, por defecto es public pero podemos escoger cualquier nombre. Este es el único campo obligatorio que nuestro archivo tenga si deseamos desplegar a Firebase Hosting.
+
+**ignore (Array):**
+- Es un arreglo de strings, sirve para prevenir subir algunos directorios o ficheros al hosting. Puedes usar la misma sintaxis que se usa en el .gitignore (globs) aquí para estos archivos. Si no tienes idea sobre Gitignore, puedes verlo en la siguiente clase del Curso Profesional de Git y GitHub.
+**rewrites (Array):**
+- Recibe un arreglo de objetos. Nos sirve para mostrar un mismo contenido a diferentes URLs. Esto es especialmente útil si estamos haciendo una Single Page Application (SPA) ya que podríamos decirle a Firebase que todas las rutas sean servidas con un archivo específico.
+
+**source (String):** 
+- Usando globs, el patrón de URL que al coincidir debe servir otro archivo.
+regex (String): Hace lo mismo que logra source, pero en lugar de usar globs usa RegEx.
+destination (String): El archivo que se va a ser servido si la ruta especificada en source o regex se cumple.
+
+**redirects (Array):** Recibe un arreglo de objetos. Nos sirve para que el navegador realice una redirección si el usuario accede a ciertas URLs. Es diferente al rewrite, pues el rewrite mantendra la URL que el usuario ingresó mientras el redirect también hará un cambio en la misma.
+source (String): Usando globs, el patrón de URL que al coincidir debe servir otro archivo.
+regex (String): Hace lo mismo que logra source, pero en lugar de usar globs usa RegEx.
+destination (String): La ruta hacia donde debe de ir la página web si la ruta especificada en source o regex se cumple.
+type (Number): El Status Code que debe devolver el response:
+301: Moved Permanently
+302: Temporary Redirect
+
+**headers (Array):** Recibe un arreglo de objetos. Nos permite pasar algunos Headers extra en la respuesta de ciertos recursos.
+source (String): Usando globs, el patrón de URL que al coincidir debe servir otro archivo.
+regex (String): Hace lo mismo que logra source, pero en lugar de usar globs usa RegEx.
+headers (Array): Recibe un arreglo de objetos. La lista de headers que se deben aplicar si la ruta especificada en source o regex se cumple.
+key (String): La nombre del header (por ejemplo: Cache-Control).
+value (String): El valor que tendrá el header.
+
+> Configuraciones en firebase.json para mantener un nivel de seguridad basico 
+
+```
+{
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "redirects": [
+      {
+        "source": "/posts",
+        "destination": "/",
+        "type": 301
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "headers": [
+    {
+      "source": "**/*.@(jpg|jpeg|gif|png)",
+      "headers":[
+        {
+          "key": "Cache-Control",
+          "value": "max-age=3100"
+        }
+      ]
+    }
+  ]
+
+}
+
+
+```

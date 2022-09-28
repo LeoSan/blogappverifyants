@@ -124,8 +124,6 @@ class UserServices {
     const storage = getStorage();
     const storageRef = ref(storage, 'some-child');
 
-    console.log("file->",file);
-    return false;
 
     // 'file' comes from the Blob or File API
     const upload = uploadBytes(storageRef, file).then((snapshot) => {
@@ -134,8 +132,7 @@ class UserServices {
 
     console.log("upload->",upload);
 
-
-    //return resp;
+    return upload;
   }
 
 
