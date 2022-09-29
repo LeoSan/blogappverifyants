@@ -375,3 +375,31 @@ value (String): El valor que tendrá el header.
 
 
 ```
+## Clase 28: Que son las notificaciones 
+
+**Como teoría**
+- Primero se solicitan los permisos de notificaciones y se registra un service Worker
+- Segundo se genera un token y encia al servidor
+- Tercero Inserta a una coleccion de tokens 
+- Cuarto Se dispara una función que registra el token a un topico 
+- Quinto Puede registrar un Post -> podemos disparar una funcion indicando a la comunida que existe un nuevo elemento. 
+- Sexto la notificación les avisa  los usuarios asociados al topico 
+
+> Resumen 
+- [Nota](./info/CloudMessaging_001.png)
+
+
+**Nota**
+> Un punto negativo de las notificaciones es que suelen prestarse mucho a ser spam, y algunos sistemas operativos como Windows o teléfonos android te muestran las notificaciones ya directamente en el sistema operativo, así que hay que usarlas con moderación.
+
+## Clase 29: Implementando las notificaciones en el proyecto
+
+Sinceramente me quedo con la teoria, ya que el curso esta obsoleto solo me queda investigar y practicar la documentación actual es esta. 
+
+- [Documento](https://firebase.google.com/docs/cloud-messaging/js/client)
+
+> Resumen: Dejo este ejemplo para seguir como guia ya que este pana lo hizo en next.js 
+- [Ejemplo](https://github.com/jlbousing/nextjs-firebase-practica)
+
+- Solucionar problemas como la carga de imagen 
+- Notificaciones SW 
