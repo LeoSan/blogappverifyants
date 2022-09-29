@@ -392,7 +392,7 @@ value (String): El valor que tendrá el header.
 **Nota**
 > Un punto negativo de las notificaciones es que suelen prestarse mucho a ser spam, y algunos sistemas operativos como Windows o teléfonos android te muestran las notificaciones ya directamente en el sistema operativo, así que hay que usarlas con moderación.
 
-## Clase 29: Implementando las notificaciones en el proyecto
+## Clase 29 - 30 - 31 : Implementando las notificaciones en el proyecto
 
 Sinceramente me quedo con la teoria, ya que el curso esta obsoleto solo me queda investigar y practicar la documentación actual es esta. 
 
